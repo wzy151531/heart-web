@@ -1,0 +1,56 @@
+@keyframes dotAnimation1 {
+  from {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(0.7);
+    opacity: 1;
+  }
+}
+
+@keyframes dotAnimation2 {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rootAnimation {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(0.95);
+  }
+}
+
+.heart-dot {
+  flex-shrink: 0;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.heart-blank {
+  flex-shrink: 0;
+}
+
+.heart-line {
+  display: flex;
+}
+
+#root {
+  animation: rootAnimation;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
