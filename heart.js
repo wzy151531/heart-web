@@ -12,9 +12,9 @@ const dotHeightRatio = 20;
 const HEART_WIDTH = 70;
 const HEART_HEIGHT = 40;
 
-const calculateHeartLine = (x, y) => {
-  const amendedX = x * xCoefficient;
-  const amendedY = y * yCoefficient;
+const calculateHeartLine = (x, y, ratio = 1) => {
+  const amendedX = x * xCoefficient * ratio;
+  const amendedY = y * yCoefficient * ratio;
   return (amendedX ** 2 + amendedY ** 2 - 1) ** 3 - amendedX ** 2 * amendedY ** 3
 }
 
@@ -35,6 +35,36 @@ const drawHeart = (onDrawHeartDot, onDrawHeartBlank, onDrawRowDone) => {
 // const handleDrawHeartBlank = () => process.stdout.write(' ');
 // const handleDrawHeartDot = (x, y) => process.stdout.write(item[x - y - item.length * (Math.floor((x - y) / item.length))]);
 
+const dotWrapsArr = [[], [], [], [], []];
+
+let turn = 4;
+let direction = 'alternate';
+
+setInterval(
+  () => {
+    dotWrapsArr.forEach(
+      (dotWraps, index) => {
+        dotWraps.forEach(
+          (dotWrap) => {
+            dotWrap.style.opacity = turn <= index ? 1 : 0;
+          }
+        )
+      }
+    )
+    if (turn === 4 && direction === 'alternate') {
+      direction = 'traverse';
+    } else if (turn === 0 && direction === 'traverse') {
+      direction = 'alternate';
+    }
+    if (direction === 'alternate') {
+      turn += 1;
+    } else if (direction === 'traverse') {
+      turn -= 1;
+    }
+  },
+  200,
+)
+
 const handleDrawRowDone = (y) => {
   const root = document.getElementById('root');
   const freshLine = document.createElement('div');
@@ -43,7 +73,35 @@ const handleDrawRowDone = (y) => {
   root.appendChild(freshLine);
 }
 const handleDrawHeartDot = (x, y) => {
+  if (calculateHeartLine(x, y, 1.25) <= 0) {
+    if (x < 0) {
+      if (Math.random() < ((HEART_WIDTH / 2 - Math.abs(x) )/ HEART_WIDTH) * 1.3) {
+        handleDrawHeartBlank(y);
+        return;
+      }
+    } else {
+      if (Math.random() < ((HEART_WIDTH / 2 + Math.abs(x) )/ HEART_WIDTH) * 1.5) {
+        handleDrawHeartBlank(y);
+        return;
+      }
+    }
+  }
   const line = document.getElementById(`line-${y}`);
+  const freshDotWrap = document.createElement('div');
+  if (calculateHeartLine(x, y, 1.25) > 0) {
+    if (calculateHeartLine(x, y, 1.2) <= 0) {
+      dotWrapsArr[4].push(freshDotWrap)
+    } else if (calculateHeartLine(x, y, 1.15) <= 0) {
+      dotWrapsArr[3].push(freshDotWrap);
+    } else if (calculateHeartLine(x, y, 1.1) <= 0) {
+      dotWrapsArr[2].push(freshDotWrap);
+    } else if (calculateHeartLine(x, y, 1.05) <= 0) {
+      dotWrapsArr[1].push(freshDotWrap);
+    } else {
+      dotWrapsArr[0].push(freshDotWrap);
+    }
+  }
+  freshDotWrap.className = 'heart-dot-wrap';
   const freshDot = document.createElement('div');
   freshDot.className = 'heart-dot';
   freshDot.style.width = `${dotWidth * dotWidthRatio}px`;
@@ -76,7 +134,8 @@ const handleDrawHeartDot = (x, y) => {
   freshDot.style.animationDuration = '0.5s';
   freshDot.style.animationIterationCount = 'infinite';
   freshDot.style.animationDelay = `${Math.random()}s`;
-  line.appendChild(freshDot);
+  freshDotWrap.appendChild(freshDot);
+  line.appendChild(freshDotWrap);
 }
 
 const handleDrawHeartBlank = (y) => {

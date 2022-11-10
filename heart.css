@@ -22,14 +22,8 @@
   }
 }
 
-@keyframes rootAnimation {
-  from {
-    transform: scale(1);
-  }
-
-  to {
-    transform: scale(0.95);
-  }
+.heart-dot-wrap {
+  transition: opacity .2s;
 }
 
 .heart-dot {
@@ -46,11 +40,4 @@
 
 .heart-line {
   display: flex;
-}
-
-#root {
-  animation: rootAnimation;
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
 }
