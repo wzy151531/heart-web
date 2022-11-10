@@ -73,19 +73,6 @@ const handleDrawRowDone = (y) => {
   root.appendChild(freshLine);
 }
 const handleDrawHeartDot = (x, y) => {
-  if (calculateHeartLine(x, y, 1.25) <= 0) {
-    if (x < 0) {
-      if (Math.random() < ((HEART_WIDTH / 2 - Math.abs(x) )/ HEART_WIDTH) * 1.3) {
-        handleDrawHeartBlank(y);
-        return;
-      }
-    } else {
-      if (Math.random() < ((HEART_WIDTH / 2 + Math.abs(x) )/ HEART_WIDTH) * 1.5) {
-        handleDrawHeartBlank(y);
-        return;
-      }
-    }
-  }
   const line = document.getElementById(`line-${y}`);
   const freshDotWrap = document.createElement('div');
   if (calculateHeartLine(x, y, 1.25) > 0) {

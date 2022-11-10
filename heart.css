@@ -41,3 +41,7 @@
 .heart-line {
   display: flex;
 }
+
+body {
+  background-color: black;
+}
